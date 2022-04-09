@@ -1,0 +1,118 @@
+﻿@using CardAuction.Models
+@{
+    Layout = null;
+    string BackToController = string.Empty, BackToAction = string.Empty, BackToId = string.Empty;
+    if(Session[CDictionary.SK_BackTo] != null)
+    {
+        CLinkTo backTo = Session[CDictionary.SK_BackTo] as CLinkTo;
+        BackToController = backTo.ToController;
+        BackToAction = backTo.ToAction;
+        BackToId = backTo.ToId;
+    }
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>登入</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/Content/Bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/MemberCss/cssMemberLogin.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="fullPage">
+        <div id="header">
+            <div id="divHidden">
+            </div>
+            <div id="divIcon">
+                <a href="~/">
+                    <img id="webIcon" src="~/images/site/logo.svg" />
+                </a>
+            </div>
+            <div id="divBack">
+                @if (string.IsNullOrEmpty(BackToController))
+                {
+                    <i class="fa-solid fa-xmark"></i>
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(BackToId))
+                    {
+                <a href="~/@BackToController/@BackToAction">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+                    }
+                    else
+                    {
+                <a href="~/@BackToController/@BackToAction/@BackToId">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+                    }
+                }
+
+            </div>
+
+        </div>
+        <div class="row align-items-center">
+            <div id="formLogin" class="col-6 col-sm-6 col-md-4 col-lg-3">
+                <div id="txtLoginInfo">請登入您的帳戶</div>
+                <form action="#" method="post">
+                    <div id="divUsr">
+                        <input type="text" name="Account" id="username" placeholder="   帳號" />
+                    </div>
+                    <div id="divPwd">
+                        <input type="password" name="Password" id="password" placeholder="   密碼" />
+                        <div>
+                            <i class="fa-solid fa-eye" id="pwdEye"></i>
+                        </div>
+                    </div>
+
+                    <div id="divForget">
+                        @Html.ActionLink("忘記密碼？","PasswordForget",null, new { id = "pwdForget" })
+                    </div>
+                    <span class="error">@ViewBag.errorMessage</span>
+                    <div id="divSend">
+                        <input type="submit" id="btnSend" value="登入" disabled />
+                    </div>
+                    <div id="txtRegistInfo">
+                        沒有帳戶？@Html.ActionLink("立即建立", "Register")
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var inputAcc = document.getElementById('username');
+        inputAcc.focus();
+        var inputPwd = document.getElementById('password');
+        var pwdEye = document.getElementById('pwdEye');
+        var btnSend = document.getElementById('btnSend');
+        var btnBack = document.getElementById('divBack');
+
+        pwdEye.addEventListener('click', togglePassword);
+        inputAcc.addEventListener('keyup', checkButton);
+        inputPwd.addEventListener('keyup', checkButton);
+        function togglePassword() {
+            if (inputPwd.type == 'password') {
+                inputPwd.type = 'text';
+            }
+            else {
+                inputPwd.type = 'password';
+            }
+        }
+        function checkButton() {
+            if (inputAcc.value == '' || inputPwd.value == '') {
+                btnSend.style.backgroundColor = '#ced3d8';
+                btnSend.disabled = 'true';
+            }
+            else {
+                btnSend.style.backgroundColor = '#6b6b6b';
+                btnSend.disabled = '';
+            }
+        }
+    </script>
+</body>
+</html>
+

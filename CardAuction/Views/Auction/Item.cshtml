@@ -1,0 +1,868 @@
+﻿@model CardAuction.Models.tAuctionItem
+@using CardAuction.Models
+@{
+    ViewBag.Title = "競標商品";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string filepath0 = Model.fPhoto0;
+    string filepath1 = Model.fPhoto1;
+    string filepath2 = Model.fPhoto2;
+    string filepath3 = Model.fPhoto3;
+    int leastBid = Model.fMoneyNow + Model.fMoneyStep;
+    int secondTotalRemain = Convert.ToInt32((Model.fEndTime - DateTime.Now).TotalSeconds);
+    string grading = Model.fGrading == "None" ? "沒有鑑定" : Model.fGrading.Substring(2);
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/Content/AuctionCss/cssAuctionItem.css" type="text/css" />
+}
+
+    <div class="mt-5">
+        <div class="mb-3" id="divSort">
+            競標 / @Model.fSort
+        </div>        
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6" id="divItemName">
+                @Model.fItemName
+            </div>
+
+                
+            <div class="col-sm-12 col-md-6 container" id="divButtons">
+                <div class="row">
+
+                    <div class="col-4">
+                        <button id="btnComment"><i class="fa-solid fa-comments"></i> 聯絡賣家</button>
+                    </div>
+
+                    <div class="col-4">
+                        <button class="notFollowing" id="btnFavorite"><i id="iconFavorite" class="fa-solid fa-heart-circle-plus"></i> <span id="txtFavorite">加入追蹤</span></button>
+                    </div>
+
+                    <div class="col-4">
+                        <button id="btnReport"><i class="fa-solid fa-triangle-exclamation"></i>檢舉</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6" id="divPhoto">
+                    <div>
+                        <img src="~/Images/AuctionItemImages/@filepath0" id="imgShow" /><br />
+                    </div>
+                    <div id="divSmallList">
+                        @{
+                            if (Model.fPhoto0 != null)
+                            {
+                                <img src="~/Images/AuctionItemImages/@filepath0" class="imgSmall imgOut" id="imgSmall0" />
+                            }
+                            if (Model.fPhoto1 != null)
+                            {
+                                <img src="~/Images/AuctionItemImages/@filepath1" class="imgSmall imgOut" id="imgSmall1" />
+                            }
+                            if (Model.fPhoto2 != null)
+                            {
+                                <img src="~/Images/AuctionItemImages/@filepath2" class="imgSmall imgOut" id="imgSmall2" />
+                            }
+                            if (Model.fPhoto3 != null)
+                            {
+                                <img src="~/Images/AuctionItemImages/@filepath3" class="imgSmall imgOut" id="imgSmall3" />
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6" id="divBidInfo">
+                    <div id="divTime">
+                        <div id="divClock">
+                            <img src="~/Images/site/iconClock.png" id="imgClock" />
+                        </div>
+                        <div id="divStamp">
+                            <span id="stampTime"></span>
+                        </div>
+                        <div id="divCalender">
+                            加入行事曆
+                        </div>
+                    </div>
+                    <div class="container" id="divMoney">
+                        @if (Model.fBuyPrice > -1)
+                        {
+                            <div class="row moneyRow rowBuy">
+                                <div class="col-3 titleMoney">
+                                    直購價
+                                </div>
+                                <div class="col-6 goldMoney">
+                                    $ @Model.fBuyPrice 元
+                                </div>
+                                <div class="col-3" id="divBtnBuy">
+                                    <button id="btnBuy">購買</button>
+                                </div>
+                            </div>
+                        }
+                        <div class="row moneyRow">
+                            <div class="col-3 titleMoney">
+                                目前出價
+                            </div>
+                            <div class="col-9">
+                                <span class="goldMoney" id="MoneyNow">$ @Model.fMoneyNow 元</span>
+                            </div>
+                        </div>
+                        <div class="row moneyRow">
+                            <div class="col-3 titleMoney">
+                                出價增額
+                            </div>
+                            <div class="col-9">
+                                <span class="goldMoney">$ @Model.fMoneyStep 元</span>
+                            </div>
+                        </div>
+                        <div class="row moneyRow" id="divBid">
+                            <div class="col-9" id="titleTextBox">
+                                <input type="number" placeholder="請輸入出價上限" id="txtBid" step="1" min="@leastBid" />
+                            </div>
+                            <div class="col-3">
+                                <button id="btnBid">出價</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="transInfo">
+                        <div id="transInputPerson" hidden>
+                            <p>面交資訊：</p>
+                            <label for="txtPerson">*給賣家聯絡訊息：</label>
+                            <textarea id="txtPerson" rows="3"></textarea>
+                        </div>
+                        <div id="transInputSeven" hidden>
+                            <p>
+                                <span>7-11 交貨便：</span>
+                                <a href="https://www.ibon.com.tw/retail_inquiry.aspx" target="_blank">ibon 便利生活站</a>
+                            </p>
+                            <label for="sevenStoreId">*門市店號：</label>
+                            <input type="number" id="sevenStoreId" />
+                            <label for="sevenStoreName">*店名：</label>
+                            <input type="text" id="sevenStoreName" />
+                            <label for="sevenUserName">*姓名：</label>
+                            <input type="text" id="sevenUserName" />
+                            <label for="sevenUserPhone">*電話：</label>
+                            <input type="tel" id="sevenUserPhone" />
+                        </div>
+                        <div id="transInputFami" hidden>
+                            <p>
+                                <span>全家店到店：</span>
+                                <a href="https://www.famiport.com.tw/Web_Famiport/page/ShopQuery.aspx" target="_blank">Fami Port</a>
+                            </p>
+                            <label for="famiStoreId">*門市店號：</label>
+                            <input type="number" id="famiStoreId" />
+                            <label for="famiStoreName">*店名：</label>
+                            <input type="text" id="famiStoreName" />
+                            <label for="famiUserName">*姓名：</label>
+                            <input type="text" id="famiUserName" />
+                            <label for="famiUserPhone">*電話：</label>
+                            <input type="tel" id="famiUserPhone" />
+                        </div>
+                        <div id="transInputOk" hidden>
+                            <p>
+                                <span>OK mart 店到店寄件：</span>
+                                <a href="https://www.okmart.com.tw/convenient_shopSearch" target="_blank">OK mart</a>
+                            </p>
+                            <label for="okStoreId">*門市店號：</label>
+                            <input type="number" id="okStoreId" />
+                            <label for="okStoreName">*店名：</label>
+                            <input type="text" id="okStoreName" />
+                            <label for="okUserName">*姓名：</label>
+                            <input type="text" id="okUserName" />
+                            <label for="okUserPhone">*電話：</label>
+                            <input type="tel" id="okUserPhone" />
+                        </div>
+                        <div id="transInputLife" hidden>
+                            <p>
+                                <span>萊爾富 店到店寄件：</span>
+                                <a href="https://www.hilife.com.tw/storeInquiry_street.aspx" target="_blank">Hi-Life 店面查詢</a>
+                            </p>
+                            <label for="lifeStoreId">*門市店號：</label>
+                            <input type="number" id="lifeStoreId" />
+                            <label for="lifeStoreName">*店名：</label>
+                            <input type="text" id="lifeStoreName" />
+                            <label for="lifeUserName">*姓名：</label>
+                            <input type="text" id="lifeUserName" />
+                            <label for="lifeUserPhone">*電話：</label>
+                            <input type="tel" id="lifeUserPhone" />
+                        </div>
+                        <div id="transInputLogi" hidden>
+                            <p>物流：</p>
+                            <label for="logiUserAddress">*送達地址：</label>
+                            <input type="text" id="logiUserAddress" />
+                            <label for="logiUserName">*姓名：</label>
+                            <input type="text" id="logiUserName" />
+                            <label for="logiUserPhone">*電話：</label>
+                            <input type="tel" id="logiUserPhone" />
+                        </div>
+                    </div>
+
+                    <div class="row" id="divHistory">
+                        <div class="row historyRecord">
+                            <div class="col-4 historyAccount">
+                                出價者
+                            </div>
+                            <div class="col-6 historyTime">
+                                時間
+                            </div>
+                            <div class="col-2 historyMoney">
+                                出價
+                            </div>
+                        </div>
+                        <div id="bidHere">
+                            <!-- bid History here-->
+                        </div>
+                    </div>
+
+                </div>
+                <div class="container">
+                    <div class="row" id="divDescription">
+                        <div class="col-6 col-sm-5 col-md-3 titleTopic">
+                            商品說明
+                        </div>
+                        <div id="divDescriptContent">
+                            <div class="mt-2 mb-4">鑑定公司：@grading</div>
+                            <div class="mb-4">賣家：@ViewBag.PostUserAccount</div>
+                            <div class="mb-4">
+                                @Model.fItemDescription
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row" id="divComment">
+                        <div class="col-6 col-sm-5 col-md-3 titleTopic">
+                            留言
+                        </div>
+                        <div id="divCommentContent">
+
+                        </div>
+                        <div id="inputSend">
+                            <div id="commentHere">
+                                <!-- comment result -->
+                            </div>
+
+                            <div class="row commentRecord">
+                                <div class="col-8 col-sm-8 col-md-10">
+                                    <input type="text" id="txtComment" maxlength="100" />
+                                </div>
+                                <div class="col-2 col-sm-2 col-md-1" id="divCountComment">
+                                    <span id="countComment">0/100</span>
+                                </div>
+                                <div class="col-2 col-sm-2 col-md-1">
+                                    <button id="btnCommentSend">留言</button>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row" id="divHistory">
+                        <div class="col-6 col-sm-5 col-md-3 titleTopic">
+                            歷史成交統計
+                        </div>
+                        <div id="divHistoryContent">
+                            <br /><br /><br /><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section scripts{
+    <script>
+
+
+        var secondRemain = @secondTotalRemain ;
+        var leastBid = @leastBid;
+        var btnBuyConfirm = false;
+        var domTime = document.getElementById('stampTime');
+        var btnReport = document.getElementById('btnReport');
+        var btnBuy = document.getElementById('btnBuy');
+        var btnBid = document.getElementById('btnBid');
+        var txtBid = document.getElementById('txtBid');
+        var domShow = document.getElementById('imgShow');
+        var btnFavorite = document.getElementById('btnFavorite');
+        var iconFavorite = document.getElementById('iconFavorite');
+        var txtFavorite = document.getElementById('txtFavorite');
+        var txtComment = document.getElementById('txtComment');
+        var countComment = document.getElementById('countComment');
+        var btnCommentSend = document.getElementById('btnCommentSend');
+        var commentHere = document.getElementById('commentHere');
+        var bidHere = document.getElementById('bidHere');
+        var MoneyNow = document.getElementById('MoneyNow');
+        @if (Session[CDictionary.SK_UserAccount] == null)
+    {
+        @:var userAcc = '';
+    }
+    else
+    {
+        @:var userAcc = '@Session[CDictionary.SK_UserAccount].ToString()';
+    }
+        var itemId = '@Model.fItemId';
+
+        var timer = window.setInterval(function () {
+            secondRemain -= 7;
+            refreshStampTime(secondRemain);
+        }, 7000);
+
+
+        document.querySelectorAll('.imgSmall').forEach(function (dom) {
+            dom.addEventListener('mouseover', function () {
+                this.classList.remove('imageOut');
+                this.classList.add('imageHover');
+                domShow.src = this.src;
+            });
+            dom.addEventListener('mouseleave', function () {
+                this.classList.remove('imageHover');
+                this.classList.add('imageOut');
+            });
+            dom.addEventListener('click', function () {
+                this.classList.remove('imageOut');
+                this.classList.add('imageHover');
+                domShow.src = this.src;
+            });
+        });
+
+        txtComment.addEventListener('keyup', function () {
+            let letters = txtComment.value;
+            countComment.textContent = `${letters.length}/100`;
+        });
+
+        refreshStampTime(secondRemain);
+        @if(Session[CDictionary.SK_UserUserId] != null && Session[CDictionary.SK_UserUserId].ToString().Equals(Model.fPostUserId))
+        {
+        <text>
+        btnFavorite.disabled = true;                                          // 有登入而且就是上架者自己
+        btnReport.disabled = true;                                            // 則不給按追蹤、檢舉、購買和出價
+        if (txtBid) {                                                         // 出價text box 可能不存在，另外處理
+            txtBid.disabled = true;
+        }
+        if (btnBid) {                                                         // 出價按鍵可能不存在，另外處理
+            btnBid.disabled = true;
+        }
+        if (btnBuy) {
+            btnBuy.disabled = true;                                           // 購買鍵可能不存在，另外處理
+        }
+
+        </text>
+        }
+
+
+        @if (Session[CDictionary.SK_UserUserId] == null)
+        {
+            Session[CDictionary.SK_RedirectTo] = new CLinkTo("Auction", "Item", Model.fItemId);
+        <text>
+        let btns = [btnFavorite, btnReport, btnBid, btnCommentSend, btnBuy];    // 無登入者，若點擊這些按鈕，送去登入頁
+        btns.forEach(dom => {
+            if (dom) {
+                dom.addEventListener('click', () => {
+                    location.href = '@Url.Content("~/Member/Login")';
+                });
+            }
+        });
+        </text>
+        }
+        else
+        {
+        <text>
+        btnFavorite.addEventListener('click', () => {                           // 有登入者，或非主人的帳號登入，可按功能
+            let para = `?itemId=${itemId}`;                                     // 有追蹤、出價
+            fetch('@Url.Content("~/Member/FavoriteAuction")' + para, { method: 'GET' })
+                .then(response => response.text())
+                .then(isFavorite => toggleFavorite(isFavorite));
+        });
+
+        if (btnBid) {
+            btnBid.addEventListener('click', function () {
+                let amount = parseInt(txtBid.value);
+                if (amount >= 2147483647) {
+                    btnBid.textContent = '太大';
+                    window.setTimeout(() => btnBid.textContent = '出價', 2000);
+                    return;
+                }
+                if (amount >= leastBid) {
+                    sendBid(amount);
+                }
+                txtBid.value = '';
+                txtBid.focus();
+            });
+        }
+
+        btnCommentSend.addEventListener('click', function () {
+            let content = txtComment.value;
+            if (content != '') {
+                sendComment(content);
+            }
+            txtComment.value = '';
+            countComment.textContent = '0/100';
+            txtComment.focus();
+        });
+
+        if (btnBuy) {
+            btnBuy.addEventListener('click', function () {
+                if (btnBuyConfirm) {
+                    sendBid(@Model.fBuyPrice);          // 直購
+                    btnBuyConfirm = false;
+                }
+                else {
+                    btnBuyConfirm = true;
+                    btnBuy.textContent = '確認';
+                    window.setTimeout(() => {
+                        btnBuy.textContent = '購買';
+                        btnBuyConfirm = false;
+                    }, 3000);
+                }
+            });
+        }
+
+        </text>
+        }
+
+
+        checkFavorite();
+        receiveComments();
+        receiveBidRecords();
+        checkFinish();
+
+        document.getElementById('btnComment').addEventListener('click', function () {
+            location.href += '#divComment';
+            txtComment.focus();
+        });
+
+        function refreshStampTime(t) {
+            if (t <= 0) {
+                domTime.textContent = '競標已結束';
+                window.clearInterval(timer);
+                if (btnBuy) {
+                    btnBuy.disabled = true;
+                }
+                if (btnBid) {
+                    btnBid.disabled = true;
+                }
+                if (txtBid) {
+                    txtBid.disabled = true;
+                }
+                txtComment.disabled = true;
+                btnCommentSend.disabled = true;
+                btnReport.disabled = true;
+
+                checkFinish();
+                return;
+            }
+            let day = Math.floor(t / 86400);
+            t %= 86400;
+            let hr = Math.floor(t / 3600);
+            t %= 3600;
+            let min = Math.floor(t / 60);
+            domTime.textContent = `${day} 天 ${hr} 時 ${min} 分 結束`;
+        }
+
+        function sendBid(amount) {
+            let para = `?itemId=${itemId}&amount=${amount}`;
+            fetch('@Url.Content("~/Auction/Bid")' + para, { method: 'GET' })
+                .then(() => {
+                    receiveBidRecords();
+                    checkFinish();
+                });
+        }
+
+        function receiveBidRecords() {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function () {
+                if (this.responseText != '') {
+                    let datas = JSON.parse(this.responseText);
+                    refreshBidRecord(datas);
+                }
+            });
+            let para = `?itemId=${itemId}`;
+            xhr.open('GET', '@Url.Content("~/Auction/ReceiveBidRecords")' + para);
+            xhr.send();
+        }
+        function sendComment(content) {
+            let xhr = new XMLHttpRequest();
+            let para = `?itemId=${itemId}&message=${content}`;
+            xhr.addEventListener('load', receiveComments);
+            xhr.open('GET', '@Url.Content("~/Auction/WriteComment")' + para);
+            xhr.send();
+        };
+
+
+        function receiveComments() {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function () {
+                if (this.responseText != '') {
+                    let datas = JSON.parse(this.responseText);
+                    refreshComments(datas);
+                }
+            });
+            let para = `?ItemId=${itemId}`;
+            xhr.open('GET', '@Url.Content("~/Auction/ReceiveComments")' + para);
+            xhr.send();
+        }
+
+        function refreshBidRecord(datas) {
+
+            bidHere.innerHTML = '';
+            let docFrag = document.createDocumentFragment();
+            for (let history of datas) {
+                let historyTime = new Date(parseInt(history.bidTime.substr(6))).toLocaleString();
+                let domRow = document.createElement('div');
+                domRow.className = 'row historyRecord';
+                let domAccount = document.createElement('div');
+                domAccount.className = 'col-4 historyAccount';
+                domAccount.textContent = history.bidAcc;
+                let domTime = document.createElement('div');
+                domTime.className = 'col-6 historyTime';
+                domTime.textContent = historyTime;
+                let domMoney = document.createElement('div');
+                domMoney.className = 'col-2 historyMoney';
+                domMoney.textContent = '$' + history.bidMoney;
+
+                domRow.appendChild(domAccount);
+                domRow.appendChild(domTime);
+                domRow.appendChild(domMoney);
+
+                docFrag.appendChild(domRow);
+            }
+            bidHere.appendChild(docFrag);
+            leastBid = parseInt(datas[0].bidMoney);
+            if (MoneyNow) {
+                MoneyNow.textContent = '$ ' + leastBid + ' 元';
+            }
+            txtBid.min = leastBid;
+        }
+
+        function refreshComments(datas) {
+            commentHere.innerHTML = '';
+            let docFrag = document.createDocumentFragment();
+
+            for (let comment of datas) {
+                let commentTime = new Date(parseInt(comment.postTime.substr(6))).toLocaleString();
+                let domRow = document.createElement('div');
+                domRow.className = 'row commentRecord';
+                let domAccount = document.createElement('div');
+                domAccount.className = 'col-6 col-sm-6 col-md-2 commentAccount';
+                domAccount.textContent = comment.postAcc;
+                let domContent = document.createElement('div');
+                domContent.className = 'col-6 col-sm-12 col-md-8 commentContent';
+                domContent.textContent = comment.content;
+                let domTime = document.createElement('div');
+                domTime.className = 'col-6 col-sm-6 col-md-2 commentTime';
+                domTime.textContent = commentTime;
+                domRow.appendChild(domAccount);
+                domRow.appendChild(domContent);
+                domRow.appendChild(domTime);
+
+                docFrag.appendChild(domRow);
+            }
+
+            commentHere.appendChild(docFrag);
+
+        }
+        function checkFavorite() {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function () {
+                let isFavorite = xhr.response;
+                toggleFavorite(isFavorite);
+
+            });
+            let para = `?itemId=${itemId}`;
+            xhr.open('GET', '@Url.Content("~/Member/IsFavorite")' + para);
+            xhr.send();
+        };
+
+        function toggleFavorite(isFavorite) {
+            if (isFavorite == 'True') {
+                txtFavorite.textContent = '已追蹤';
+                iconFavorite.classList.add('fa-heart-circle-check');
+                iconFavorite.classList.remove('fa-heart-circle-plus');
+                btnFavorite.classList.add('following');
+                btnFavorite.classList.remove('notFollowing');
+            }
+            else {
+                txtFavorite.textContent = '加入追蹤';
+                iconFavorite.classList.add('fa-heart-circle-plus');
+                iconFavorite.classList.remove('fa-heart-circle-check');
+
+                btnFavorite.classList.remove('following');
+                btnFavorite.classList.add('notFollowing');
+            }
+        }
+        function checkFinish() {
+
+            let para = `/?itemId=${itemId}`;
+            fetch('@Url.Content("~/Auction/FinishInfo")' + para, { method: 'GET' })
+                .then(response => response.json())
+                .then(response => {
+
+                    let statusMessage = response.statusMessage;
+
+                    if (statusMessage == 'BuyFinish' || statusMessage == 'EndTimeFinish') {
+                        window.clearInterval(timer);
+                        domTime.textContent = '競標已結束';
+                        if (userAcc == response.winUserAcc) {
+                            GenerateFinishlUI(
+                                response.winUserAcc,
+                                response.winMoney,
+                                response.transPerson,
+                                response.transSeven,
+                                response.transFami,
+                                response.transOk,
+                                response.transLife,
+                                response.transLogi);
+                        }
+                        else {
+                            GenerateFinishNotWinner(response.winUserAcc, response.winMoney);
+                        }
+                    }
+                    else if (statusMessage == 'NoTopFinish' || statusMessage == 'Deleted') {
+                        window.clearInterval(timer);
+                        domTime.textContent = '競標已結束';
+                        GenerateNoTopFinishUI();
+                    }
+                });
+        }
+        function GenerateFinishNotWinner(acc, money) {
+            let area = document.getElementById('divMoney');
+
+            let docFrag = document.createDocumentFragment();
+            let domWinInfo = document.createElement('div');
+            domWinInfo.className = 'finishRow moneyRow titleMoney rowBuy';
+            domWinInfo.textContent = `${acc} 已得標`;
+            docFrag.appendChild(domWinInfo);
+
+            let domWinMoney = document.createElement('div');
+            domWinMoney.className = 'finishRow moneyRow';
+            let spanMoneyTitle = document.createElement('span');
+            spanMoneyTitle.className = 'titleMoney';
+            spanMoneyTitle.textContent = '購買價格：';
+            let spanMoneyAmount = document.createElement('span');
+            spanMoneyAmount.className = 'goldMoney';
+            spanMoneyAmount.textContent = '$ ' + money + ' 元';
+            domWinMoney.appendChild(spanMoneyTitle);
+            domWinMoney.appendChild(spanMoneyAmount);
+            docFrag.appendChild(domWinMoney);
+
+            let domEndInfo = document.createElement('div');
+            domEndInfo.className = 'finishRow finishTitle gold ';
+            domEndInfo.textContent = '請點擊下方連結繼續瀏覽其他商品';
+            docFrag.appendChild(domEndInfo);
+
+            let domContinueRow = document.createElement('div');
+            domContinueRow.className = 'finishRow moneyRow';
+            let btnContinue = document.createElement('button');
+            btnContinue.textContent = '繼續瀏覽其他商品';
+            btnContinue.id = 'btnContinue';
+            domContinueRow.appendChild(btnContinue);
+            docFrag.appendChild(domContinueRow);
+
+            area.innerHTML = '';
+            area.appendChild(docFrag);
+
+            btnContinue.addEventListener('click', () => location.href = '@Url.Content("~/Auction/List")');
+        }
+        function GenerateNoTopFinishUI() {
+            let area = document.getElementById('divMoney');
+
+            let docFrag = document.createDocumentFragment();
+            let domWinInfo = document.createElement('div');
+            domWinInfo.className = 'finishRow finishTitle moneyRow gold rowBuy';
+            domWinInfo.textContent = '很抱歉，此商品已結束，無人得標';
+            docFrag.appendChild(domWinInfo);
+
+            let domEndInfo = document.createElement('div');
+            domEndInfo.className = 'finishRow finishTitle gold ';
+            domEndInfo.textContent = '請點擊下方連結繼續瀏覽其他商品';
+            docFrag.appendChild(domEndInfo);
+
+            let domContinueRow = document.createElement('div');
+            domContinueRow.className = 'finishRow moneyRow';
+            let btnContinue = document.createElement('button');
+            btnContinue.textContent = '繼續瀏覽其他商品';
+            btnContinue.id = 'btnContinue';
+            domContinueRow.appendChild(btnContinue);
+            docFrag.appendChild(domContinueRow);
+
+            area.innerHTML = '';
+            area.appendChild(docFrag);
+
+            btnContinue.addEventListener('click', () => {
+                let para = `/?itemId=${itemId}`;
+                fetch('@Url.Content("~/Auction/DeleteItem")' + para, { method: 'GET' })
+                    .then(function () {
+                        location.href = '@Url.Content("~/Auction/List")';
+                    });
+            });
+        }
+
+
+        function GenerateFinishlUI(acc, money, person, seven, fami, ok, life, logi) {
+            let area = document.getElementById('divMoney');
+
+            let docFrag = document.createDocumentFragment();
+            let domWinInfo = document.createElement('div');
+            domWinInfo.className = 'finishRow moneyRow titleMoney rowBuy';
+            domWinInfo.textContent = `${acc} 已得標`;
+            docFrag.appendChild(domWinInfo);
+
+            let domWinMoney = document.createElement('div');
+            domWinMoney.className = 'finishRow moneyRow';
+            let spanMoneyTitle = document.createElement('span');
+            spanMoneyTitle.className = 'titleMoney';
+            spanMoneyTitle.textContent = '購買價格：';
+            let spanMoneyAmount = document.createElement('span');
+            spanMoneyAmount.className = 'goldMoney';
+            spanMoneyAmount.textContent = '$ ' + money + ' 元';
+            domWinMoney.appendChild(spanMoneyTitle);
+            domWinMoney.appendChild(spanMoneyAmount);
+            docFrag.appendChild(domWinMoney);
+            let domTransRow = document.createElement('div');
+            domTransRow.className = 'finishRow  moneyRow';
+            let spanTransTitle = document.createElement('span');
+            spanTransTitle.className = 'titleMoney';
+            spanTransTitle.textContent = '運送方式：'
+
+            let selectTrans = document.createElement('select');
+            selectTrans.id = 'selectTrans';
+            selectTrans.className = 'selectTrans finishTitle';
+            let transName = ['面交', '7-11', '全家', 'OK', '萊爾富', '物流'];
+            let transId = ['Person', 'Seven', 'Fami', 'Ok', 'Life', 'Logi'];
+            let transMoney = [person, seven, fami, ok, life, logi];
+            for (let i in transName) {
+                if (transMoney[i] > -1) {
+                    let opt = document.createElement('option');
+                    opt.textContent = transName[i];
+                    opt.id = transId[i];
+                    opt.value = transMoney[i];
+                    selectTrans.appendChild(opt);
+                }
+            }
+            domTransRow.appendChild(spanTransTitle);
+            domTransRow.appendChild(selectTrans);
+            docFrag.appendChild(domTransRow);
+
+
+            let domTransFeeRow = document.createElement('div');
+            domTransFeeRow.className = 'finishRow moneyRow';
+            let spanTransFeeTitle = document.createElement('span');
+            spanTransFeeTitle.className = 'titleMoney';
+            spanTransFeeTitle.textContent = '運費：';
+            let spanTransFeeAmount = document.createElement('span');
+            spanTransFeeAmount.id = 'spanTransFeeAmount';
+            spanTransFeeAmount.className = 'goldMoney';
+            spanTransFeeAmount.textContent = '$ ' + selectTrans.value + ' 元';
+            domTransFeeRow.appendChild(spanTransFeeTitle);
+            domTransFeeRow.appendChild(spanTransFeeAmount);
+            docFrag.appendChild(domTransFeeRow);
+
+            let domCheckRow = document.createElement('div');
+            domCheckRow.className = 'finishRow moneyRow';
+            let btnCheck = document.createElement('button');
+            btnCheck.textContent = '前往結賑';
+            btnCheck.id = 'btnCheck';
+            domCheckRow.appendChild(btnCheck);
+            docFrag.appendChild(domCheckRow);
+
+            area.innerHTML = '';
+            area.appendChild(docFrag);
+
+            selectTransChange();
+
+            selectTrans.addEventListener('change', selectTransChange);
+            btnCheck.addEventListener('click', () => {
+                btnCheck.textContent = '處理中，請稍待片刻……';
+                btnCheck.disabled = true;
+                let selectTrans = document.getElementById('selectTrans');
+                let optId = selectTrans.options[selectTrans.selectedIndex].id;
+                let para = `?itemId=${itemId}`;
+                fetch('@Url.Content("~/Auction/GetEndInfo")' + para, { method: 'GET' })
+                    .then(response => response.json())
+                    .then(response => {
+                        let totalMoney = parseInt(response.topMoney);           // 最高價
+                        totalMoney += parseInt(selectTrans.value);              // 運費
+                        let deliveryInfo = response.postUserInfo;
+                        switch (optId) {
+                            case "Person":
+                                let txtPerson = document.getElementById('txtPerson').value;
+                                deliveryInfo = `選擇方式：「面交」。賣家提供訊息：「${deliveryInfo}」。買家提供訊息：「${txtPerson}」。`;
+                                break;
+                            case "Seven":
+                                let sevenStoreId = document.getElementById('sevenStoreId').value;
+                                let sevenStoreName = document.getElementById('sevenStoreName').value;
+                                let sevenUserName = document.getElementById('sevenUserName').value;
+                                let sevenUserPhone = document.getElementById('sevenUserPhone').value;
+                                deliveryInfo = `選擇方式：「7-11 交貨便」。7-11門市店號：「${sevenStoreId}」。7-11門市店名：「${sevenStoreName}」。買家姓名：「${sevenUserName}」。買家電話：「${sevenUserPhone}」。`;
+                                break;
+                            case "Fami":
+                                let famiStoreId = document.getElementById('famiStoreId').value;
+                                let famiStoreName = document.getElementById('famiStoreName').value;
+                                let famiUserName = document.getElementById('famiUserName').value;
+                                let famiUserPhone = document.getElementById('famiUserPhone').value;
+                                deliveryInfo = `選擇方式：「全家店到店」。全家門市店號：「${famiStoreId}」。全家門市店名：「${famiStoreName}」。買家姓名：「${famiUserName}」。買家電話：「${famiUserPhone}」。`;
+                                break;
+                            case "Ok":
+                                let okStoreId = document.getElementById('okStoreId').value;
+                                let okStoreName = document.getElementById('okStoreName').value;
+                                let okUserName = document.getElementById('okUserName').value;
+                                let okUserPhone = document.getElementById('okUserPhone').value;
+                                deliveryInfo = `選擇方式：「OK mart 店到店」。OK門市店號：「${okStoreId}」。OK門市店名：「${okStoreName}」。買家姓名：「${okUserName}」。買家電話：「${okUserPhone}」。`;
+                                break;
+                            case "Life":
+                                let lifeStoreId = document.getElementById('lifeStoreId').value;
+                                let lifeStoreName = document.getElementById('lifeStoreName').value;
+                                let lifeUserName = document.getElementById('lifeUserName').value;
+                                let lifeUserPhone = document.getElementById('lifeUserPhone').value;
+                                deliveryInfo = `選擇方式：「萊爾富店到店」。萊爾富門市店號：「${lifeStoreId}」。萊爾富門市店名：「${lifeStoreName}」。買家姓名：「${lifeUserName}」。買家電話：「${lifeUserPhone}」。`;
+                                break;
+                            case "Logi":
+                                let logiUserAddress = document.getElementById('logiUserAddress').value;
+                                let logiUserName = document.getElementById('logiUserName').value;
+                                let logiUserPhone = document.getElementById('logiUserPhone').value;
+                                deliveryInfo = `選擇方式：「物流」。送達地址：「${logiUserAddress}」。買家姓名：「${logiUserName}」。買家電話：「${logiUserPhone}」。`;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        let resultPara = `?itemId=${itemId}&totalMoney=${totalMoney}&deliveryInfo=${deliveryInfo}`;
+                        fetch('@Url.Content("~/Auction/GenerateResult")' + resultPara, { method: 'GET' })
+                            .then(() => {
+                                btnCheck.textContent = '作業完成，頁面轉向中……'
+                                location.href = '@Url.Content("~/Member/MyPage")';
+                            })
+                            .catch(() => {
+                                btnCheck.textContent = '發生不明原因';
+                                btnCheck.disabled = false;
+                            });
+                    });
+            });
+        }
+
+        function selectTransChange() {
+            let selectTrans = document.getElementById('selectTrans');
+
+            let optId = selectTrans.options[selectTrans.selectedIndex].id;
+            document.getElementById('spanTransFeeAmount').textContent = '$ ' + selectTrans.value + ' 元';
+            document.querySelectorAll('[id^="transInput"]').forEach(dom => dom.hidden = true);
+            document.getElementById('transInput' + optId).hidden = false;
+
+            fetch('@Url.Content("~/Member/GetUserInfo")', { method: 'GET' })
+                .then(response => response.json())
+                .then(datas => {
+                    document.querySelectorAll('[id$="UserName"]').forEach(dom => dom.value = datas.realName);
+                    document.querySelectorAll('[id$="UserAddress"]').forEach(dom => dom.value = datas.address);
+                    document.querySelectorAll('[id$="UserPhone"]').forEach(dom => dom.value = datas.phone);
+                });
+        }
+    </script>
+}

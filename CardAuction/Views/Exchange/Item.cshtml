@@ -1,0 +1,510 @@
+﻿@model CardAuction.Models.tExchangeItem
+
+@using CardAuction.Models
+@{
+    ViewBag.Title = "交換商品";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string filepath0 = Model.fPhoto0;
+    string filepath1 = Model.fPhoto1;
+    string filepath2 = Model.fPhoto2;
+    string filepath3 = Model.fPhoto3;
+    //int leastBid = Model.fMoneyNow + Model.fMoneyStep;
+    int secondTotalRemain = Convert.ToInt32((Model.fEndTime - DateTime.Now).TotalSeconds);
+
+}
+
+@section styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/Content/Bootstrap/bootstrap.min.css" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="~/Content/ExchangeCss/cssExchangeItem.css" type="text/css" />
+}
+<div class="container">
+    <div class="mt-5" id="divMainContent">
+        <div class="mb-3" id="divSort">
+            交換 / @Model.fSort
+        </div>
+        <div class="mb-4 "><h4> 帳號：@ViewBag.PostUserAccount</h4></div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6" id="divItemName">
+                @Model.fItemName
+            </div>
+            <div class="col-sm-12 col-md-6 container" id="divButtons">
+                <div class="row">
+
+                    <div class="col-4">
+                        <button id="btnComment"><i class="fa-solid fa-comments"></i> 問與答</button>
+                    </div>
+
+                    <div class="col-4">
+                        <button class="notFollowing" id="btnFavorite"><i id="iconFavorite" class="fa-solid fa-heart-circle-plus"></i> <span id="txtFavorite">加入收藏</span></button>
+                    </div>
+
+                    <div class="col-4">
+                        <button id="btnReport"><i class="fa-solid fa-triangle-exclamation"></i> 檢舉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6" id="divPhoto">
+                    <div>
+                        <img src="~/Images/ExchangeItemImages/@filepath0" id="imgShow" /><br />
+                    </div>
+                    <div id="divSmallList">
+                        @{
+                            if (Model.fPhoto0 != null)
+                            {
+                                <img src="~/Images/ExchangeItemImages/@filepath0" class="imgSmall imgOut" id="imgSmall0" />
+                            }
+                            if (Model.fPhoto1 != null)
+                            {
+                                <img src="~/Images/ExchangeItemImages/@filepath1" class="imgSmall imgOut" id="imgSmall1" />
+                            }
+                            if (Model.fPhoto2 != null)
+                            {
+                                <img src="~/Images/ExchangeItemImages/@filepath2" class="imgSmall imgOut" id="imgSmall2" />
+                            }
+                            if (Model.fPhoto3 != null)
+                            {
+                                <img src="~/Images/ExchangeItemImages/@filepath3" class="imgSmall imgOut" id="imgSmall3" />
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6" id="divExchangeInfo">
+                    <div id="divTime">
+                        <div id="divClock">
+                            <img src="~/Images/site/iconClock.png" id="imgClock" />
+                        </div>
+                        <div id="divStamp">
+                            <span id="stampTime"></span>
+                        </div>
+                        <div id="divCalender">
+                            加入行事曆
+                        </div>
+                    </div>
+                    <div class="container" id="divItemMsg">
+                        <div class="col-sm-12 ">
+                            <h4>物品所在地: @Model.fItemLocation</h4><br />
+                            <h4>鑑定級別:  @Model.fItemLevel</h4><br />
+                            <h4>希望交換分類:  @Model.fSort</h4><br />
+                            <h4>希望的交換物:  @Model.fHopeItemName</h4><br />
+                            <h4>希望交換地點:  @Model.fHopeItemLocation</h4><br />
+                            <hr />
+                            @if (Model.fDelete)
+                            {
+                                <br />
+                                <h1>交換已結束</h1>
+                            }
+                            else
+                            {
+                                <br />
+                                <h4 class="timestyle">開始時間:@Model.fCreateTime</h4><br />
+                                <h4 class="timestyle">結束時間:@Model.fEndTime</h4>
+                            }
+                        </div>
+                        <div class="col-sm-12 floatR">
+                            <button id="IWantExchange" class="btnSize btn-dark  btncheng">我  要  交  換</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="divDescription">
+                    <div class="col-6 col-sm-5 col-md-3 titleTopic">
+                        商品說明
+                    </div>
+                    <div id="divDescriptContent">
+                        @*<div class="mt-2 mb-4">開始時間:@Model.fCreateTime</div>
+                        <div class="mt-2 mb-4">結束時間:@Model.fEndTime</div>*@
+                        <div class="mb-4">@*提出交換者：@ViewBag.PostUserAccount*@</div>
+                        <div class="mb-4">
+                            <h4>@Model.fItemDescription</h4> 
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row" id="divComment">
+                    <div class="col-12 ">
+                        <div class="row" id="EIB">
+                            <!-- result here-->
+
+                            <!--<div class="col-sm-4 col-md-3 ">
+                                <img src="~/images/ExchangeItemImages/picture01.png" alt="" class="col-1 col-sm-3 col-md-2  avatar">
+                                <span>@ViewBag.PostUserAccount</span><br>
+
+                                <br><br>
+                                <p>@Model.fItemDescription</p>
+                            </div>
+                            <div class="col-sm-4 col-md-5 ">-->
+                                <!-- 放img(交換者照片位置fPhoto 0-3) -->
+                                <!--<img src="~/images/ExchangeItemImages/WS Tachibana Hibiki  Konohanamiku.jpg" alt="" class="col-3 col-sm-4 col-md-3  ">
+                                <img src="~/images/ExchangeItemImages/WS Tachibana Hibiki  Konohanamiku.jpg" alt="" class="col-3 col-sm-4 col-md-3  ">
+                                <img src="~/images/ExchangeItemImages/WS Tachibana Hibiki  Konohanamiku.jpg" alt="" class="col-3 col-sm-4 col-md-3  ">
+                            </div>
+                            <div class="col-sm-4 col-md-4 ">
+                                <h5>
+                                    物品類別:@Model.fSort
+                                </h5>
+                                <h5>
+                                    鑑定級別: @Model.fItemLevel
+                                </h5>
+                                <h5>
+                                    物品所在地:@Model.fItemLocation
+                                </h5>
+                                <div class="col-sm-12">
+                                    <button type="button" id="BossWantExchange" class="btnSize btn-dark btncheng btnright">確定交換</button>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="divComment">
+                    <div class="col-6 col-sm-5 col-md-3 titleTopic ">
+                        問與答
+                    </div>
+                    <div id="divCommentContent">
+
+                    </div>
+                    <div id="inputSend">
+                        <div id="commentHere">
+                            <!-- comment result -->
+                        </div>
+
+                        <div class="row commentRecord">
+                            <div class="col-9 col-sm-9 col-md-10">
+                                <input type="text" id="txtComment" />
+                            </div>
+                            <div class="col-3 col-sm-3 col-md-2">
+                                <button id="btnCommentSend">留言</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        var secondRemain = @secondTotalRemain ;
+
+        var domTime = document.getElementById('stampTime');//加入行事曆
+        var domShow = document.getElementById('imgShow');//圖片
+        var btnFavorite = document.getElementById('btnFavorite');//加入追蹤
+        var iconFavorite = document.getElementById('iconFavorite');//追蹤icon變換
+        var txtFavorite = document.getElementById('txtFavorite');//收藏
+        var txtComment = document.getElementById('txtComment');//評論
+        /*var countComment = document.getElementById('countComment');*///評論字數
+        var btnCommentSend = document.getElementById('btnCommentSend');//發送評論
+        var commentHere = document.getElementById('commentHere');//交換評論
+        var EIB = document.getElementById('EIB');//ExchangItemB
+
+        var fItemId = '@Model.fItemId';//物品ID
+        var IWantExchange = document.getElementById('IWantExchange');
+
+        var timer = window.setInterval(function () {
+            secondRemain -= 7;
+            refreshStampTime(secondRemain);
+        }, 7000);
+        //計時器 每7秒更新
+
+
+        IWantExchange.addEventListener('click', function () {
+            let para = `?id=${fItemId}`;
+            location.href = '@Url.Content("~/Exchange/Couple")' + para;
+        });
+
+
+
+        function refreshStampTime(t) {
+            if (t <= 0) {
+                domTime.textContent = '交換已結束';
+                clearInterval(timer);
+                return;
+            }
+            let day = Math.floor(t / 86400);
+            t %= 86400;
+            let hr = Math.floor(t / 3600);
+            t %= 3600;
+            let min = Math.floor(t / 60);
+            domTime.textContent = `${day} 天 ${hr} 時 ${min} 分 結束`;
+        }//刷新時間，如果剩餘時間小於0秒則結束交換
+
+        document.querySelectorAll('.imgSmall').forEach(function (dom) {
+            dom.addEventListener('mouseover', function () {
+                this.classList.remove('imageOut');
+                this.classList.add('imageHover');
+                domShow.src = this.src;
+            });
+            dom.addEventListener('mouseleave', function () {
+                this.classList.remove('imageHover');
+                this.classList.add('imageOut');
+            });
+            dom.addEventListener('click', function () {
+                this.classList.remove('imageOut');
+                this.classList.add('imageHover');
+                domShow.src = this.src;
+            });
+        });//照片效果
+
+        refreshStampTime(secondRemain);
+        @if(Session[CDictionary.SK_UserUserId] != null && Session[CDictionary.SK_UserUserId].ToString().Equals(Model.fPostUserId) || Model.fDelete)
+        {
+        <text>
+        btnFavorite.disabled = true;                                          // 有登入而且就是上架者自己
+        IWantExchange.hidden = true;                                               // 則不給按追蹤、我要交換、檢舉
+        btnReport.disabled = true;
+        </text>
+        }
+
+
+
+        @if (Session[CDictionary.SK_UserUserId] == null)
+        {
+            Session[CDictionary.SK_BackTo] = new CLinkTo("Exchange", "Item", Model.fItemId);
+            Session[CDictionary.SK_RedirectTo] = new CLinkTo("Exchange", "item", Model.fItemId);
+        @:btnFavorite.addEventListener('click', function (event) {
+            @:event.preventDefault();
+            @:location.href = '@Url.Content("~/Member/Login")';
+        @:});
+        //追蹤未登入跳轉登入畫面
+
+        @:btnCommentSend.addEventListener('click', function () {
+            @:location.href = '@Url.Content("~/Member/Login")';
+        @:});
+        //評論未登入跳轉登入畫面
+        }
+        else
+        {
+        @:btnFavorite.addEventListener('click', function (event) {
+            @:event.preventDefault();
+            @:let xhr = new XMLHttpRequest();
+                @:xhr.addEventListener('load', function() {
+                    @:let isFavorite = xhr.response;
+                    @:toggleFavorite(isFavorite);
+                @:});
+            @:let para = `?ItemId=${fItemId}`;
+            @:xhr.open('GET', '@Url.Content("~/Member/FavoriteExchange")' + para);
+            @:xhr.send();
+        @:});
+
+        @:btnCommentSend.addEventListener('click', function () {
+            @:let content = txtComment.value;
+            @:if (content != '') {
+            @:    sendComment(content);
+            @:}
+            @:txtComment.value = '';
+            @:txtComment.focus();
+        @:});
+        }
+
+
+
+        checkFavorite();
+        receiveComments();
+        receiveEIB();
+
+        document.getElementById('btnComment').addEventListener('click', function () {
+            location.href += '#divComment';
+            txtComment.focus();
+        });
+
+
+        function sendComment(content) {
+            let xhr = new XMLHttpRequest();
+            let para = `?itemId=${fItemId}&message=${content}`;
+            xhr.addEventListener('load', receiveComments);
+            xhr.open('GET', '@Url.Content("~/Exchange/WriteComment")' + para);
+            xhr.send();
+        };
+
+
+        function receiveComments() {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function () {
+                if (this.responseText != '') {
+                    let datas = JSON.parse(this.responseText);
+                    refreshComments(datas);
+                }
+            });
+            let para = `?itemId=${fItemId}`;
+            xhr.open('GET', '@Url.Content("~/Exchange/ReceiveComments")' + para);
+            xhr.send();
+        }
+
+        function refreshComments(datas) {
+            commentHere.innerHTML = '';
+            let docFrag = document.createDocumentFragment();
+
+            for (let comment of datas) {
+                let commentTime = new Date(parseInt(comment.postTime.substr(6))).toLocaleString();
+                let domRow = document.createElement('div');
+                domRow.className = 'row commentRecord';
+                let domAccount = document.createElement('div');
+                domAccount.className = 'col-6 col-sm-6 col-md-2 commentAccount';
+                domAccount.textContent = comment.postAcc;
+                let domContent = document.createElement('div');
+                domContent.className = 'col-6 col-sm-12 col-md-8 commentContent';
+                domContent.textContent = comment.content;
+                let domTime = document.createElement('div');
+                domTime.className = 'col-6 col-sm-6 col-md-2 commentTime';
+                domTime.textContent = commentTime;
+                domRow.appendChild(domAccount);
+                domRow.appendChild(domContent);
+                domRow.appendChild(domTime);
+
+                docFrag.appendChild(domRow);
+            }
+
+            commentHere.appendChild(docFrag);
+
+        }
+        function checkFavorite() {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function () {
+                let isFavorite = xhr.response;
+                toggleFavorite(isFavorite);
+
+            });
+            let para = `?ItemId=${fItemId}`;
+            xhr.open('GET', '@Url.Content("~/Member/IsFavorite")' + para);
+            xhr.send();
+        };
+
+        function toggleFavorite(isFavorite) {
+            if (isFavorite == 'True') {
+                txtFavorite.textContent = '已收藏';
+                iconFavorite.classList.add('fa-heart-circle-check');
+                iconFavorite.classList.remove('fa-heart-circle-plus');
+                btnFavorite.classList.add('following');
+                btnFavorite.classList.remove('notFollowing');
+            }
+            else {
+                txtFavorite.textContent = '加入收藏';
+                iconFavorite.classList.add('fa-heart-circle-plus');
+                iconFavorite.classList.remove('fa-heart-circle-check');
+                btnFavorite.classList.remove('following');
+                btnFavorite.classList.add('notFollowing');
+            }
+        }
+
+        //EIB(ExchangeItemB)
+
+        function refreshEIB(datas) {
+            EIB.innerHTML = '';
+            let docFrag = document.createDocumentFragment();
+            console.log(datas);
+            for (let comment of datas) {
+                let EIBRow = document.createElement('div');
+                EIBRow.className = 'row eibrow';
+
+
+
+                let EIBContent = document.createElement('div');
+                EIBContent.className = ' col-sm-6 col-md-7 IMG100';
+                [comment.fPhoto0, comment.fPhoto1, comment.fPhoto2, comment.fPhoto3].forEach(dom => {
+                    if (dom != null) {
+                        let IMGDIV = document.createElement('div');
+                        IMGDIV.className = " ImgWrap";
+                        let domImg = document.createElement('img');
+                        domImg.src = '@Url.Content("~/Images/ExchangeItemImages/")' + dom;
+                        EIBContent.appendChild(IMGDIV);
+                        IMGDIV.appendChild(domImg);
+                    }
+                });
+
+                let EIBName = document.createElement('div');
+                EIBName.className = 'col-sm-12 col-md-12';
+                let EIBAccountH4 = document.createElement('h2');
+                EIBAccountH4.textContent = `帳號:${comment.postAcc}`;
+                EIBName.appendChild(EIBAccountH4);
+
+                let EIBNameH2 = document.createElement('h2');
+                EIBNameH2.textContent = comment.fItemName;
+                EIBName.appendChild(EIBNameH2);
+
+                let EIBAccount = document.createElement('div');
+                EIBAccount.className = ' col-sm-3 col-md-2 ';
+                let dompMsg = document.createElement('p');
+                dompMsg.textContent = `商品敘述:${comment.ItemDescription}`;
+                EIBAccount.appendChild(dompMsg);
+
+
+                let domH3 = document.createElement('div');
+                domH3.className = ' col-sm-3 col-md-2 ';
+                let domh301 = document.createElement('h6');
+                domh301.textContent = `物品類別:${comment.Sort}`;
+                domH3.appendChild(domh301);
+                let domh302 = document.createElement('h6');
+                domh302.textContent = `鑑定等級:${comment.ItemLevel}`;
+                domH3.appendChild(domh302);
+                let domh303 = document.createElement('h6');
+                domh303.textContent = `物品所在地:${comment.ItemLocation}`;
+                domH3.appendChild(domh303);
+
+
+                @if (Session[CDictionary.SK_UserUserId] != null && Session[CDictionary.SK_UserUserId].ToString() == Model.fPostUserId  && !Model.fDelete ) {
+                    <text>
+                let AWantExchangediv = document.createElement('div');
+                AWantExchangediv.className = 'col-sm-12 col-md-1 '
+                let AWantExchange = document.createElement('button');
+                AWantExchange.id = 'btnResult';
+                AWantExchange.className = ' btnSize btn-dark floatR btncheng';
+                AWantExchange.textContent = "確定交換";
+                AWantExchangediv.appendChild(AWantExchange);
+                EIBRow.appendChild(EIBName);
+                EIBRow.appendChild(EIBContent);  //照片
+                EIBRow.appendChild(EIBAccount);  //ID
+                //EIBRow.appendChild(dompMsg);  //商品敘述
+                //IMGROW.appendChild(EIBContent);  //照片在包ROW
+                EIBRow.appendChild(domH3);  //固定資訊
+                EIBRow.appendChild(AWantExchangediv);
+                docFrag.appendChild(EIBRow);
+                AWantExchange.addEventListener('click', function () {
+                    let para = `?itemIdA=${fItemId}&itemIdB=${comment.fItemTableId}`;
+                    location.href = '@Url.Content("~/Exchange/btnSureResult")' + para;
+                });
+                </text>
+                }
+                else
+                {
+                <text>
+                EIBRow.appendChild(EIBName);
+                EIBRow.appendChild(EIBContent);  //照片
+                EIBRow.appendChild(EIBAccount);  //ID
+                //EIBRow.appendChild(dompMsg);  //商品敘述
+                //IMGROW.appendChild(EIBContent);  //照片在包ROW
+                EIBRow.appendChild(domH3);  //固定資訊
+                docFrag.appendChild(EIBRow);
+                </text>
+                }
+                //if (btnResult != null) {
+                //    btnResult.hidden = True;
+                //}
+                //else {
+                //    btnResult.disabled = True;
+                //}
+            }
+            EIB.appendChild(docFrag);
+        }
+
+        function receiveEIB() {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function () {
+                //console.log(this.responseText);
+                if (this.responseText != '') {
+                    let datas = JSON.parse(this.responseText);
+                    refreshEIB(datas);
+                }
+            });
+            let para = `?itemId=${fItemId}`;
+            xhr.open('GET', '@Url.Content("~/Exchange/ExchangeItemUserB")' + para);
+            xhr.send();
+        }
+
+    </script>
+}

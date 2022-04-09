@@ -1,0 +1,138 @@
+﻿/*  淡灰 ced3d8   ebebeb    
+    深灰 6b6b6b   
+    黑 333333    
+    藏青 1f3444    
+    金  ab8f4e    
+    白ffffff */
+/*@media (max-width: 575px) {
+    html {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    html {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    html {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 992px) and (max-width:1199px) {
+    html {
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 1200px) {
+    html {
+        font-size: 14px;
+    }
+}
+*/
+
+h2 {
+    margin-top: 5px;
+    padding-left:25px;
+    background-color: #1f3344;
+    font-size: 24px;
+    color: aliceblue;
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height:3.5rem;
+}
+
+/*body {
+    width: 80%;
+    margin: auto;
+}
+*/
+.cards {
+    height: 200px;
+    display:flex;
+    align-items:center;
+}
+
+.divLogo{
+    width:500px;
+    height:150px;
+}
+.divLogo>img{
+    width:100%;
+    height:100%;
+}
+
+.websiteprofolio {
+    display:flex;
+    align-items:center;
+}
+
+.websiteprofolio p {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size:1.3rem;
+}
+
+
+.membersphoto {
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    height: 17rem;
+    margin-top:20px;
+    padding-top:10px;
+    background-color: #ced3d7;
+}
+
+.name .photo {
+    width: 170px;
+    height: 170px;
+}
+
+.name .photo > img {
+    width: 100%;
+    height: 100%;
+}
+
+    .name .photo > img:hover {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        box-shadow: 1px 1px 5px 3px gray;
+    }
+
+.name > p {
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-align: center;
+    padding-top: 10px;
+    color: #1f3444;
+}
+.mainphoto {
+    width: 90%;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+.buttom {
+    width: 90%;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1.5px solid rgb(229, 225, 225);
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    display: none;
+}
+
+.h5 {
+    margin-top: 25px;
+    font-family: 'Noto Sans TC', sans-serif;
+    width:100px;
+}
+
+.description {
+    font-family: 'Noto Sans TC', sans-serif;
+}

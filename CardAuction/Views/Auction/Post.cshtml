@@ -1,0 +1,351 @@
+﻿@using CardAuction.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "上架";
+    ViewBag.pageTitle = "新增競標商品";
+    string username = null;
+    string userId = null;
+    if(Session[CDictionary.SK_UserAccount] != null)
+    {
+        username = Session[CDictionary.SK_UserAccount].ToString();
+        userId = (string)Session[CDictionary.SK_UserUserId];
+    }
+}
+@section styles{
+    <link rel="stylesheet" href="~/Content/AuctionCss/cssAuctionPost.css" type="text/css" />
+}
+    <form action="#" method="post" enctype="multipart/form-data">
+        <div id="fullPage">
+            <div id="mainBox">
+                <div id="basicInfo">
+                    <div class="divTitle">
+                        基本資訊  <span class="errMsg">@ViewData["errorMessage"]</span>
+                    </div>
+                    <input type="hidden" name="fPostUserId" value="@userId" />
+                    <div class="row divContent" id="divImgSelect">
+                        <div class="contentHead col-12 col-md-3">
+                            商品圖片
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <div class="row picBlockList">
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="picBlock dragNone" id="picBlock0">
+                                    </div>
+                                    *商品圖片
+                                    <input type="file" name="Photo0" id="inputFile0">
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="picBlock dragNone" id="picBlock1">
+                                    </div>
+                                    <input type="file" name="Photo1" id="inputFile1">
+                                    圖片二
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="picBlock dragNone" id="picBlock2">
+                                    </div>
+                                    圖片三
+                                    <input type="file" name="Photo2" id="inputFile2">
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <div class="picBlock dragNone" id="picBlock3">
+                                    </div>
+                                    圖片四
+                                    <input type="file" name="Photo3" id="inputFile3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row divContent" id="divItemName">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="ItemName">*商品名稱</label>
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <input type="text" name="fItemName" id="ItemName" maxlength="60" required />
+                            <p id="countItemName">
+                                0/60
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row divContent" id="divItemDescription">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="ItemDescription">*商品描述</label>
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <textarea name="fItemDescription" id="ItemDescription" maxlength="800" required></textarea>
+                            <p id="countDescription">
+                                0/800
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row divContent" id="divSort">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="Sort">*類別</label>
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <select name="fSort" id="seleSort">
+                                <option value="寶可夢 (Pokemon)">寶可夢 (Pokemon)</option>
+                                <option value="遊戲王 (Yu-Gi-Oh!)">遊戲王 (Yu-Gi-Oh!)</option>
+                                <option value="魔法風雲會 (MTG)">魔法風雲會 (MTG)</option>
+                                <option value="黑與白 (Weiß Schwarz)">黑與白 (Weiß Schwarz)</option>
+                                <option value="七龍珠 (DragonBallHeroes)">七龍珠 (DragonBallHeroes)</option>
+                                <option value="鋼彈大戰 (GUNDAM WAR)">鋼彈大戰 (GUNDAM WAR)</option>
+                                <option value="聖火降魔錄 (FE0)">聖火降魔錄 (FE0)</option>
+                                <option value="運動卡 (Sport)">運動卡 (Sport)</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="sellDetail">
+                    <div class="divTitle">
+                        銷售資訊
+                    </div>
+                    <div class="row divContent" id="divMoneyStart">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="MoneyStart">*起標價格</label>
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <input type="number" name="fMoneyStart" id="MoneyStart" min="1" value="1" required />
+                        </div>
+                    </div>
+
+                    <div class="row divContent">
+                        <div class="contentHead col-12 col-md-3">
+                            <label class="fomr-check-label" for="BuyPrice">是否直購價</label>
+                        </div>
+                        <div class="col-12 col-md-9" style="display:flex; align-items:center;">
+                            <input type="checkbox" id="BuyPrice" name="isBuy" value="true" />
+                            <input type="hidden" name="isBuy" value="false" />
+                            <input type="number" name="fBuyPrice" id="txtBuy" min="1" value="1" disabled />
+                        </div>
+                    </div>
+
+                    <div class="row divContent" id="divMoneyStep">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="MoneyStep">*出價增額</label>
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <input type="number" name="fMoneyStep" id="MoneyStep" min="1" value="1" required />
+                        </div>
+                    </div>
+
+                    <div class="row divContent" id="divGrading">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="Sort">*鑑定級別</label>
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <select name="fGrading" id="seleGrading">
+                                <option value="None">沒有鑑定</option>
+                                <option value="鑑定GEM MT 10 (Gem Mint)">GEM MT 10 (Gem Mint)</option>
+                                <option value="鑑定Mint 9 (Mint)">Mint 9 (Mint)</option>
+                                <option value="鑑定NM-MT 8 (Near Mint-Mint)">NM-MT 8 (Near Mint-Mint)</option>
+                                <option value="鑑定NM 7 (Near Mint)">NM 7 (Near Mint)</option>
+                                <option value="鑑定EX-MT 6 (Excellent-Mint)">EX-MT 6 (Excellent-Mint)</option>
+                                <option value="鑑定EX 5 (Excellent)">EX 5 (Excellent)</option>
+                                <option value="鑑定VG-EX 4 (Very Good-Excellent)">VG-EX 4 (Very Good-Excellent)</option>
+                                <option value="鑑定VG 3 (Very Good)">VG 3 (Very Good)</option>
+                                <option value="鑑定Good 2 (Good)">Good 2 (Good)</option>
+                                <option value="鑑定Fr 1.5 (Fair)">Fr 1.5 (Fair)</option>
+                                <option value="鑑定PR 1 (Poor)">PR 1 (Poor)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row divContent" id="divEndTime">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="EndTIme">*競標時間</label>
+                        </div>
+                        <div class="content col-12 col-md-9">
+                            <div id="dateTimeContainer">
+                                <div id="endTimeDate">
+                                    <input type="date" name="fEndTimeDate" id="EndTimeDate" required />
+                                </div>
+                                <div id="endTimeTime">
+                                    <input type="time" name="fEndTimeTime" id="EndTimeTime" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="transFee">
+                    <div class="divTitle">
+                        運費
+                    </div>
+                    <div class="row divContent">
+                        <div class="contentHead col-12 col-md-3">
+                            *買家支付運費
+                        </div>
+                        <div class="content col-12 col-md-9" id="divTrans">
+                            <div class="col-4">
+                                <label class="fomr-check-label" for="chkPerson">面交</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="fTransPerson" id="txtPerson" min="0" value="0" disabled />
+                            </div>
+                            <div class="form-check form-switch col-4 col-md-3">
+                                <input type="checkbox" class="form-check-input" id="chkPerson" name="isPerson" value="true" />
+                                <input type="hidden" name="isPerson" value="false" />
+                            </div>
+
+                            <div class="col-4">
+                                <label class="fomr-check-label" for="chkSeven">7-11</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="fTransSeven" id="txtSeven" min="0" value="0" disabled />
+                            </div>
+                            <div class="form-check form-switch col-4 col-md-3">
+                                <input type="checkbox" class="form-check-input" id="chkSeven" name="isSeven" value="true" />
+                                <input type="hidden" name="isSeven" value="false" />
+                            </div>
+
+                            <div class="col-4">
+                                <label class="fomr-check-label" for="chkFami">全家</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="fTransFami" id="txtFami" min="0" value="0" disabled />
+                            </div>
+                            <div class="form-check form-switch col-4 col-md-3">
+                                <input type="checkbox" class="form-check-input" id="chkFami" name="isFami" value="true" />
+                                <input type="hidden" name="isFami" value="false" />
+                            </div>
+
+                            <div class="col-4">
+                                <label class="fomr-check-label" for="chkOk">OK</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="fTransOk" id="txtOk" min="0" value="0" disabled />
+                            </div>
+                            <div class="form-check form-switch col-4 col-md-3">
+                                <input type="checkbox" class="form-check-input" id="chkOk" name="isOk" value="true" />
+                                <input type="hidden" name="isOk" value="false" />
+                            </div>
+
+                            <div class="col-4">
+                                <label class="fomr-check-label" for="chkLife">萊爾富</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="fTransLife" id="txtLife" min="0" value="0" disabled />
+                            </div>
+                            <div class="form-check form-switch col-4 col-md-3">
+                                <input type="checkbox" class="form-check-input" id="chkLife" name="isLife" value="true" />
+                                <input type="hidden" name="isLife" value="false" />
+                            </div>
+
+                            <div class="col-4">
+                                <label class="fomr-check-label" for="chkLogi">物流</label>
+                            </div>
+                            <div class="col-4">
+                                <input type="number" name="fTransLogi" id="txtLogi" min="0" value="0" disabled />
+                            </div>
+                            <div class="form-check form-switch col-4 col-md-3">
+                                <input type="checkbox" class="form-check-input" id="chkLogi" name="isLogi" value="true" />
+                                <input type="hidden" name="isLogi" value="false" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row divContent">
+                        <div class="contentHead col-12 col-md-3">
+                            <label for="UserInfo">*聯絡資訊</label>
+                        </div>
+                        <div class="col-12 col-md-9" id="divUserInfo">
+                            <textarea name="fUserInfo" id="UserInfo" maxlength="300" placeholder="聯絡電話、E-mail" required></textarea>
+                            <p id="countUserInfo">
+                                0/300
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="buttons">
+                    <button id="btnCancel">取消</button>
+                    <button id="btnPost">上架</button>
+                </div>
+            </div>
+        </div>
+    </form>
+@section scripts{
+    <script>
+
+        var domItemName = document.getElementById('ItemName');
+        var countName = document.getElementById('countItemName');
+        domItemName.addEventListener('change', function () {
+            countName.textContent = `${domItemName.value.length}/60`;
+        });
+
+        for (let i = 0; i < 4; i++) {
+            let picBlock = document.getElementById('picBlock' + i);
+            let inputFile = document.getElementById('inputFile' + i);
+            picBlock.addEventListener('dragover', function (event) {
+                event.preventDefault();
+                this.classList.remove('dragNone');
+                this.classList.add('dragOver');
+            });
+            picBlock.addEventListener('dragleave', function () {
+                this.classList.remove('dragOver');
+                this.classList.add('dragNone');
+            });
+            picBlock.addEventListener('drop', function (event) {
+                event.preventDefault();
+                inputFile.files = event.dataTransfer.files;
+                let file = inputFile.files[0];
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.addEventListener('load', function () {
+                    picBlock.style.backgroundImage = `url('${reader.result}')`;
+                });
+            });
+            picBlock.addEventListener('click', function () {
+                inputFile.click();
+            });
+            inputFile.addEventListener('change', function () {
+                if (inputFile.files.length > 0) {
+                    let file = inputFile.files[0];
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.addEventListener('load', function () {
+                        picBlock.style.backgroundImage = `url('${reader.result}')`;
+                    })
+                    picBlock.classList.remove('dragNone');
+                    picBlock.classList.add('dragOver');
+                }
+                else {
+                    picBlock.style.backgroundImage = 'url("../../Images/site/imgSelectFrameEmpty.png")';
+                    picBlock.classList.remove('dragOver');
+                    picBlock.classList.add('dragNone');
+                }
+            })
+        }
+
+        var domItemName = document.getElementById('ItemName');
+        var countName = document.getElementById('countItemName');
+        domItemName.addEventListener('keyup', function () {
+            countName.textContent = `${domItemName.value.length}/60`;
+        });
+        var domItemDescription = document.getElementById('ItemDescription');
+        var countDescription = document.getElementById('countDescription');
+        domItemDescription.addEventListener('keyup', function () {
+            countDescription.textContent = `${domItemDescription.value.length}/800`;
+        });
+        var domUserInfo = document.getElementById('UserInfo');
+        var countUserInfo = document.getElementById('countUserInfo');
+        domUserInfo.addEventListener('keyup', function () {
+            countUserInfo.textContent = `${domUserInfo.value.length}/300`;
+        });
+
+        let arySwitch = ['BuyPrice', 'chkPerson', 'chkSeven', 'chkFami', 'chkOk', 'chkLife', 'chkLogi'];
+        let aryTxt = ['txtBuy', 'txtPerson', 'txtSeven', 'txtFami', 'txtOk', 'txtLife', 'txtLogi'];
+        for (let i = 0; i < arySwitch.length; i++) {
+            let domSwitch = document.getElementById(arySwitch[i])
+            let domTxt = document.getElementById(aryTxt[i]);
+            domSwitch.addEventListener('change', function () {
+                domTxt.disabled = !domSwitch.checked;
+            });
+        }
+
+        document.getElementById('btnCancel').addEventListener('click', function (event) {
+            event.preventDefault();
+            location.href = '@Url.Content("~/")';
+        });
+    </script>
+}

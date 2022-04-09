@@ -1,0 +1,378 @@
+﻿
+@{
+    ViewBag.Title = "競標商品一覽";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+
+    <link rel="stylesheet" href="~/Content/AuctionCss/cssAuctionList.css" type="text/css" />
+    <script src="https://kit.fontawesome.com/de361254dc.js" crossorigin="anonymous"></script>
+}
+<div id="banner">
+    卡片競標<br />
+    Auction Card
+</div>
+<div class="row" id="mainContent">
+    <div class="d-none d-sm-none d-md-block col-md-3 col-lg-2" id="divSort">
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword=""><span>所有商品</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="寶可夢"><span>寶可夢 (Pokemon)</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="遊戲王"><span>遊戲王 (Yu-Gi-Oh!)</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="魔法風雲會"><span>魔法風雲會 (MTG)</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="黑與白"><span>黑與白 (Weiß Schwarz)</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="七龍珠"><span>七龍珠 (DragonBallHeroes)</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="鋼彈大戰"><span>鋼彈大戰 (GUNDAM WAR)</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="聖火降魔錄"><span>聖火降魔錄 (FE0)</span></a>
+        </p>
+        <p class="sortTitle">
+            <a href="" class="searchSort" data-keyword="運動"><span>運動卡 (Sport)</span></a>
+        </p>
+    </div>
+    <div class="col-12 d-block d-sm-none">
+        <nav class="navbar navbar-light bg-light">
+            <div class="container">
+                    
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <span id="selectedSort">所有商品</span>
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h1 class="offcanvas-title" id="offcanvasNavbarLabel">分&emsp;類</h1>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+                            <li class="nav-item">
+                                <a class="nav-link active searchSort" data-keyword="" aria-current="page" href="#">所有商品</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="遊戲王" href="#">遊戲王</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="寶可夢" href="#">寶可夢</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="黑與白" href="#">黑與白</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="七龍珠" href="#">七龍珠</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="鋼彈大戰" href="#">鋼彈大戰</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="魔法風雲會" href="#">魔法風雲會</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="聖火降魔錄" href="#">聖火降魔錄</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link searchSort" data-keyword="運動卡" href="#">運動卡</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+        
+    <div class="col-12 col-sm-12 col-md-9 col-lg-10 container" id="divList">
+        <div class="row" id="filterArrangeBar">
+            <div id="divFilter">
+                &nbsp;&nbsp;篩選&nbsp;&nbsp;
+                <button class="btnSelect" id="btnEndTime">結束時間</button>
+                <button class="btnNotSelect" id="btnHotClick">熱門</button>
+                <button class="btnNotSelect" id="btnJustPost">最新上架</button>
+            </div>
+            <div id="divArrange" class="d-none d-sm-block">
+                <button class="btnSelect" id="btnCard">
+                    <i class="fa-solid fa-grip"></i>
+                </button>
+                <button class="btnNotSelect" id="btnList">
+                    <i class="fa-solid fa-list"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row" id="contentRow">
+            <!-- result here-->
+        </div>
+        <div class="row" id="pageBtnRow">
+            <!-- page button here -->
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var contentRow = document.getElementById('contentRow');
+        var barSortName = document.getElementById('barSortName');
+        var btnEndTime = document.getElementById('btnEndTime');
+        var btnHotClick = document.getElementById('btnHotClick');
+        var btnJustPost = document.getElementById('btnJustPost');
+        var pageBtnRow = document.getElementById('pageBtnRow');
+        var selectedSort = document.getElementById('selectedSort');
+        var filterBtns = [btnEndTime, btnHotClick, btnJustPost];
+        var btnCard = document.getElementById('btnCard');
+        var btnList = document.getElementById('btnList');
+        var arrangeBtns = [btnCard, btnList];
+        var loading = false, datas;
+        var keyword = '', filter = 'EndTime', arrange = 'Card', pageNow = 0, pageCount = 0;
+
+        document.querySelectorAll('.searchSort').forEach(function (dom) {
+            dom.addEventListener('click', function (event) {
+                keyword = this.dataset.keyword;
+                selectedSort.textContent = keyword == '' ? '所有商品' : keyword;
+                pageNow = 0;                                        // 預設開第一頁
+                Search(event, keyword, filter, pageNow);
+                GetCount(keyword);
+                document.querySelector('.btn-close').click();       // 點後縮回去
+            });
+        });
+
+        document.querySelector('.searchSort').click();      // 載入頁面後就先列所有商品
+
+        filterBtns.forEach(function (dom) {
+            dom.addEventListener('click', function (event) {
+                filter = this.id.slice(3);                  // 從index=3開始是filter字串
+                Search(event, keyword, filter, 0);          // 點過濾條件一律回到第1頁
+
+                filterBtns.forEach(d => d.className = 'btnNotSelect');      // 改過濾條件按鈕的樣式
+                this.className = 'btnSelect';
+                document.querySelectorAll('#pageBtnRow>button').forEach(d => d.className = 'btnNotSelect');
+                document.querySelector('#pageBtnRow>button').className = 'btnSelect';       // 改頁面按鈕的樣式
+            });
+        });
+
+        arrangeBtns.forEach(function (dom) {
+            dom.addEventListener('click', function (event) {
+                arrange = this.id.slice(3);                  // 從index=3開始是arrange字串
+
+                if (arrange == 'Card') {
+                    ShowSearchResultCard(datas);             // 不再 ajax 撈資料，從已撈的來呈現
+                }
+                else {
+                    ShowSearchResultList(datas);
+                }
+                arrangeBtns.forEach(d => d.className = 'btnNotSelect');      // 改排列方式按鈕的樣式
+                this.className = 'btnSelect';
+            })
+        })
+        function ShowSearchResultCard(queryResult) {
+
+            contentRow.innerHTML = '';
+
+            let docFrag = document.createDocumentFragment();
+
+            for (let item of queryResult) {
+                let secondRemain = Math.floor((new Date(parseInt(item.fEndTime.substr(6))) - new Date()) / 1000);
+                   // Ajax 撈得 Jason 的 Date 物件是來自 MS 的格式，長這樣 /Date(123456...)/
+                   // 取 substr(6) 子字串得 12345...)/ 然後 parseInt 自動去掉尾巴的 )/ ，就能實體化 JS 的 Date 物件
+                let dayRemain = Math.floor(secondRemain / 86400);
+                secondRemain %= 86400;
+                let hourRemain = Math.floor(secondRemain / 3600);
+                secondRemain %= 3600;
+                let minuteRemain = Math.floor(secondRemain / 60);
+
+                let domDiv = document.createElement('div');
+                domDiv.className = 'col-xs-12 col-sm-6 col-md-4 col-lg-3';
+                let domBorder = document.createElement('div');
+                domBorder.className = 'cardBorder';
+                let domA = document.createElement('a');
+                domA.href = '@Url.Content("~/Auction/Item/")' + item.fItemId;
+                let domImgWrap = document.createElement('div');
+                domImgWrap.className = 'imgWrap';
+                let domImg = document.createElement('img');
+                domImg.src = '@Url.Content("~/Images/AuctionItemImages/")' + item.fPhoto;
+                domImg.className = 'cardImg';
+                domImgWrap.appendChild(domImg);
+                let domCardBody = document.createElement('div');
+                domCardBody.className = 'cardBody';
+                let domPname = document.createElement('p');
+                domPname.className = 'pName';
+                domPname.textContent = item.fItemName;
+                domCardBody.appendChild(domPname);
+                let domPmoney = document.createElement('p');
+                domPmoney.className = 'pMoney';
+                domPmoney.textContent = `$ ${item.fMoneyNow} 元`;
+                domCardBody.appendChild(domPmoney);
+                let domPcount = document.createElement('p');
+                domPcount.className = 'pCount';
+                domPcount.textContent = `${item.fBidCount}次出價`;
+                domCardBody.appendChild(domPcount);
+                let domPtime = document.createElement('p');
+                domPtime.className = 'pTime';
+                let domI = document.createElement('i');
+                domI.className = 'fa-solid fa-clock';
+                domPtime.textContent = `  ${dayRemain} 天 ${hourRemain} 時 ${minuteRemain} 分`;
+                domPtime.prepend(domI);
+                domCardBody.appendChild(domPtime);
+                domA.appendChild(domImgWrap);
+                domA.appendChild(domCardBody);
+                domBorder.appendChild(domA);
+                domDiv.appendChild(domBorder);
+                docFrag.appendChild(domDiv);
+            }
+            contentRow.appendChild(docFrag);
+
+            addHoverCard();                 // 放上查詢出來的結果後加上滑鼠移上去的背景特效
+        }
+
+        function ShowSearchResultList(queryResult) {
+            contentRow.innerHTML = '';
+
+            let docFrag = document.createDocumentFragment();
+
+            for (let item of queryResult) {
+                let secondRemain = Math.floor((new Date(parseInt(item.fEndTime.substr(6))) - new Date()) / 1000);
+                // Ajax 撈得 Jason 的 Date 物件是來自 MS 的格式，長這樣 /Date(123456...)/
+                // 取 substr(6) 子字串得 12345...)/ 然後 parseInt 自動去掉尾巴的 )/ ，就能實體化 JS 的 Date 物件
+                let dayRemain = Math.floor(secondRemain / 86400);
+                secondRemain %= 86400;
+                let hourRemain = Math.floor(secondRemain / 3600);
+                secondRemain %= 3600;
+                let minuteRemain = Math.floor(secondRemain / 60);
+
+                let domA = document.createElement('a');
+                domA.href = '@Url.Content("~/Auction/Item/")' + item.fItemId;
+                let domBorder = document.createElement('div');
+                domBorder.className = 'listBorder';
+                let domImgWrap = document.createElement('div');
+                domImgWrap.className = 'listImgWrap';
+                let domImg = document.createElement('img');
+                domImg.src = '@Url.Content("~/Images/AuctionItemImages/")' + item.fPhoto;
+                domImg.className = 'listImg';
+                domImgWrap.appendChild(domImg);
+                domBorder.appendChild(domImgWrap);
+                let divName = document.createElement('div');
+                divName.className = 'listName';
+                divName.textContent = item.fItemName;
+                domBorder.appendChild(divName);
+                let divMoney = document.createElement('div');
+                divMoney.className = 'listMoney';
+                divMoney.textContent = `$ ${item.fMoneyNow} 元`;
+                domBorder.appendChild(divMoney);
+                let divCount = document.createElement('div');
+                divCount.className = 'listCount';
+                divCount.textContent = `${item.fBidCount}次出價`;
+                domBorder.appendChild(divCount);
+                let divTime = document.createElement('div');
+                divTime.className = 'listTime';
+                let domI = document.createElement('i');
+                domI.className = 'fa-solid fa-clock';
+                divTime.textContent = `  ${dayRemain} 天 ${hourRemain} 時 ${minuteRemain} 分`;
+                divTime.prepend(domI);
+                domBorder.appendChild(divTime);
+                
+                domA.appendChild(domBorder);
+                docFrag.appendChild(domA);
+            }
+            contentRow.appendChild(docFrag);
+
+            addHoverList();                 // 放上查詢出來的結果後加上滑鼠移上去的背景特效
+        }
+        function addHoverCard() {
+            document.querySelectorAll('.cardBorder').forEach(function (dom) {
+                dom.addEventListener('mouseover', function () {
+                    this.classList.add('cardSelect');
+                });
+                dom.addEventListener('mouseleave', function () {
+                    this.classList.remove('cardSelect');
+                });
+            });
+        };
+
+        function addHoverList() {
+            document.querySelectorAll('.listBorder').forEach(function (dom) {
+                dom.addEventListener('mouseover', function () {
+                    this.classList.add('cardSelect');
+                });
+                dom.addEventListener('mouseleave', function () {
+                    this.classList.remove('cardSelect');
+                });
+            });
+        };
+
+        function Search(event, keyword, filter, page) {
+            if (loading) {
+                event.preventDefault();
+                return;
+            }
+            event.preventDefault();
+            loading = true;
+
+            let xhrSearch = new XMLHttpRequest();
+            xhrSearch.addEventListener('load', function () {
+                loading = false;
+                datas = JSON.parse(xhrSearch.responseText);
+
+                if (arrange == 'Card') {
+                    ShowSearchResultCard(datas);
+                }
+                else {
+                    ShowSearchResultList(datas);
+                }
+            });
+            let para = `?sortName=${keyword}&filter=${filter}&page=${page}`;
+
+            xhrSearch.open('GET', '@Url.Content("~/Auction/QueryBySort/")' + para);
+            xhrSearch.send();
+        }
+        function GetCount(keyword) {
+            let xhrCount = new XMLHttpRequest();
+            xhrCount.addEventListener('load', function () {
+                loading = false;
+                let itemCount = parseInt(xhrCount.responseText);
+                console.log(itemCount);
+                GeneratePageButton(itemCount);
+            });
+            let para = `?sortName=${keyword}`;
+            xhrCount.open('GET', '@Url.Content("~/Auction/GetCount/")' + para);
+            xhrCount.send();
+        }
+        function GeneratePageButton(itemCount) {
+            pageBtnRow.innerHTML = '';
+            pageCount = Math.floor(itemCount / 12) + 1;
+            console.log(pageCount);
+            let docFrag = document.createDocumentFragment();
+            for (let i = 0; i < pageCount; i++) {
+                let domBtn = document.createElement('button');
+                domBtn.textContent = i + 1;
+                domBtn.id = `btnPage${i}`;
+                domBtn.className = 'btnNotSelect';
+                domBtn.addEventListener('click', function (event) {
+                    pageNow = i;
+                    changePage(event, pageNow);
+
+                    document.querySelectorAll('[id^="btnPage"]').forEach(d => d.className = 'btnNotSelect');
+                    domBtn.className = 'btnSelect';
+                })
+                docFrag.appendChild(domBtn);
+            }
+            pageBtnRow.appendChild(docFrag);
+            document.querySelector('[id^="btnPage"]').className = 'btnSelect';
+        }
+        function changePage(event, i) {
+            console.log(i);
+            Search(event, keyword, filter, i);
+            //
+        }
+    </script>
+}

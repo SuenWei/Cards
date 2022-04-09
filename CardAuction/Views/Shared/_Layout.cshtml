@@ -1,0 +1,115 @@
+﻿@using CardAuction.Models
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/Content/Bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/Content/LayoutCss/cssUserLayout.css" type="text/css" />
+    @RenderSection("styles", required: false)
+</head>
+
+<body>
+    <div class="container">
+        <div id="header">
+            <div id="divBell" title="新結束商品，請至我的競標查看"><i class="fa-solid fa-bell" id="iconBell"></i></div>
+            <div id="divLogin">
+                @{
+                    var userAcc = Session[CDictionary.SK_UserAccount];
+                    if (userAcc == null)
+                    {
+                        @Html.ActionLink("登入", "Login", "Member")
+                    }
+                    else
+                    {
+                <span id="greeting">您好，</span> @Html.ActionLink(userAcc.ToString(), "MyPage", "Member", null,new { id = "aMyPage"})
+                        @Html.ActionLink("登出","Logout","Member",null,new { id="aLogout"})
+                    }
+                }
+            </div>
+            <div id="divAbout">
+                @Html.ActionLink("關於我們", "About", "Home")
+            </div>
+            <div id="divContact">
+                @Html.ActionLink("聯絡我們", "Contact", "Home")
+            </div>
+        </div>
+        <div id="nav">
+            <div id="catalog">
+                <div id="divIcon">
+                    <a href="~/">
+                        <img src="~/Images/site/logo.svg" id="imgIcon"/>
+                    </a>
+                </div>
+                <div id="divAuction">
+                    @Html.ActionLink("競標", "List", "Auction")
+                </div>
+                <div id="divExchange">
+                    @Html.ActionLink("交換", "List", "Exchange")
+                </div>
+                <div id="divPost">
+                    @Html.ActionLink("上架商品", "Post", "Home")
+                </div>
+            </div>
+            <div id="divSearch">
+                <input type="text" id="txtSearch" placeholder="    搜尋品牌、價格、等" />
+                <div id="iconMag">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+            </div>
+        </div>
+
+        @RenderBody()
+
+        <div id="footer">
+
+        </div>
+
+    </div>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script>
+        var txtSearch = document.getElementById('txtSearch');
+        var divBell = document.getElementById('divBell');
+
+        @if (Session[CDictionary.SK_UserUserId] != null)
+        {
+    <text>
+        fetch('@Url.Content("~/Home/FindFinishAuctionItem")', { method: 'GET' })
+            .then(response => response.text())
+            .then(hasNewItem => {
+                if (hasNewItem == 'True') {
+                    window.setInterval(() => {
+                        if (divBell.style.visibility == 'hidden') {
+                            divBell.style.visibility = 'visible';
+                        }
+                        else {
+                            divBell.style.visibility = 'hidden';
+                        }
+                    }, 500);
+                }
+            });
+        </text>
+        }
+
+        txtSearch.addEventListener('keypress', event => {
+                if (event.code == 'Enter' || event.code == 'NumpadEnter') {
+                searchBy(event.target.value);
+            }
+        });
+        document.getElementById('iconMag').addEventListener('click', () => searchBy(txtSearch.value));
+
+        function searchBy(keyword) {
+            location.href = '@Url.Content("~/Home/Search/")' + keyword;
+        }
+
+
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

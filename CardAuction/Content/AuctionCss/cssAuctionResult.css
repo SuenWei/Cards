@@ -1,0 +1,205 @@
+﻿/*  淡灰 ced3d8   ebebeb    
+    深灰 6b6b6b   
+    黑 333333    
+    藏青 1f3444    
+    金  ab8f4e    
+    白ffffff */
+@media (max-width: 575px) {
+    html {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    html {
+        font-size: 11px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    html {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 992px) and (max-width:1199px) {
+    html {
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 1200px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+#divResult{
+    width: 100%;
+}
+
+.aRecord{
+    display:flex;
+}
+
+#divResult>div{
+    display: flex;
+}
+#divResult>div>div{
+    font-size: 1.6rem;
+}
+
+#postPicture > .divTitle {
+    width:100%;
+}
+
+#postPicture > .divContent {
+    display:flex;
+    width:25%;
+}
+
+.historyHeader {
+    border-bottom: solid 1px gray;
+    border-top: solid 1px gray;
+    color: black;
+    width: 100%;
+    font-size: 1.6rem;
+    justify-content: space-around;
+    padding: 25px 0px;
+    font-family: 'Noto Sans TC';
+    font-weight: bold;
+}
+
+.img-zone img{
+    height:180px;
+    margin:20px;
+}
+
+.history1{
+    display:flex;
+}
+
+.history2{
+    display:flex;
+}
+
+.history3{
+    display:flex;
+}
+
+
+.divTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Noto Sans CJK TC";
+    font-weight: bold;
+    color: #1f3344;
+    background-color: #ccc;
+}
+
+.img-zone {
+    display: flex;
+    justify-content: space-around;
+}
+
+#postPicture {
+    margin: 20px 0px 0px;
+    border-radius: 5px;
+    flex-direction: column;
+    border: gray 1px solid;
+}
+
+#postUser {
+    width: 45%;
+    float: left;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px 0px;
+}
+
+#winUser {
+    width: 45%;
+    float: right;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px 0px;
+}
+
+#winMoney {
+    width: 45%;
+    float: left;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px 0px;
+}
+
+#totalMoney {
+    width: 45%;
+    float: right;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px 0px;
+}
+
+#bidCount {
+    width: 45%;
+    float: left;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px 0px;
+}
+
+#winTime {
+    width: 45%;
+    float: right;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px 0px;
+}
+
+#deliveryInfo {
+    width: 100%;
+    float: left;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 20px auto;
+}
+
+td {
+    justify-content: space-between;
+    width: 300px;
+    text-align:center;
+}
+
+.divContent {
+    margin: 10px 0px;
+    font-family: "Noto Sans CJK TC";
+    font-weight: normal;
+    color: #1f3344;
+    
+}
+
+#postUser > .divContent,
+#winUser > .divContent,
+#winMoney > .divContent,
+#totalMoney > .divContent,
+#bidCount > .divContent,
+#winTime > .divContent,
+#deliveryInfo > .divContent{
+    padding:20px 0px;
+}
